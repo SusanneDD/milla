@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Alla hjärtans dag</title>
+</head>
+<body>
+    <main class="page">
+        <section class="card-stage">
+            <div class="card" id="valentine-card">
+                <div class="card-face card-front">
+                    <img src="milla.jpg" alt="Milla" class="card-image">
+                    <div class="front-text">Milla </div>
+                    <div class="front-badge">Alla hjärtans dag</div>
+                </div>
+                <div class="card-face card-inside">
+                    <div class="storybook" id="storybook">
+                        <div class="scene scene-1">
+                            <div class="gentleman"></div>
+                            <p class="caption">Där finns en kvinna...</p>
+                        </div>
+                        <div class="scene scene-2">
+                            <div class="gentleman walk"></div>
+                            <p class="caption">...som lyser upp hela min värld.</p>
+                        </div>
+                        <div class="scene scene-3">
+                            <div class="gentleman"></div>
+                            <div class="lady"></div>
+                            <p class="caption">Från första ögonblicket visste Tusse: Hon är något speciellt.</p>
+                        </div>
+                        <div class="scene scene-4">
+                            <div class="gentleman"></div>
+                            <div class="roses-bunch"></div>
+                            <p class="caption">Tusse väljer de vackraste rosorna(i sedlar), för henne.</p>
+                        </div>
+                        <div class="scene scene-5">
+                            <div class="gentleman hold-roses"></div>
+                            <div class="lady smile"></div>
+                            <div class="hearts-float"></div>
+                            <p class="caption">Med rosorna i handen, ger Tusse dom.</p>
+                        </div>
+                        <div class="scene scene-6">
+                            <div class="lady hold-roses smile"></div>
+                            <div class="gentleman happy"></div>
+                            <div class="hearts-float"></div>
+                            <p class="caption">Hon ler och Tusse älskar hennes leende ännu mer.</p>
+                        </div>
+                        <div class="scene scene-7">
+                            <p class="final-text">Milla min prilla </p>
+                            <p class="caption" style="font-size: 0.95rem; margin-bottom: 16px; font-style: italic;">Du är min största gåva — varje dag med dig är som Alla hjärtans dag.🖤</p>
+                            <p class="final-sign">🖤</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="control" id="card-open" aria-label="Öppna kort">→</button>
+                <button class="control" id="card-close" aria-label="Stäng kort">←</button>
+            </div>
+            <p class="hint">Använd pilarna för att öppna och stänga kortet.</p>
+        </section>
+    </main>
+    <script>
+        const card = document.getElementById("valentine-card");
+        const storybook = document.getElementById("storybook");
+        
+        document.getElementById("card-open")?.addEventListener("click", () => {
+            card?.classList.add("open");
+            // Reset animation by removing and re-adding the class to trigger restart
+            if (storybook) {
+                storybook.style.animation = "none";
+                setTimeout(() => {
+                    storybook.style.animation = "";
+                }, 10);
+            }
+            // Auto-close card after animation completes (45s + buffer)
+            setTimeout(() => {
+                card?.classList.remove("open");
+                if (storybook) {
+                    storybook.style.animation = "none";
+                }
+            }, 46000);
+        });
+        
+        document.getElementById("card-close")?.addEventListener("click", () => {
+            card?.classList.remove("open");
+            // Reset animation state when closing
+            if (storybook) {
+                storybook.style.animation = "none";
+            }
+        });
+    </script>
+</body>
+</html>
