@@ -62,11 +62,12 @@
                 </div>
             </div>
             <div class="controls">
-                <button class="control" id="card-open" aria-label="Öppna kort">→</button>
-                <button class="control" id="card-close" aria-label="Stäng kort">←</button>
+                <button class="control" id="card-close" aria-label="Stäng kort">✕</button>
+                <button class="control" id="prev-scene" aria-label="Föregående scen">←</button>
+                <button class="control" id="next-scene" aria-label="Nästa scen">→</button>
                 <button class="control music-toggle" id="music-toggle" aria-label="Slå på/av musik">🔊</button>
             </div>
-            <p class="hint">Använd pilarna för att öppna och stänga kortet.</p>
+            <p class="hint">Tryck på → för att öppna kortet. Använd pilarna för att bläddra.</p>
         </section>
     </main>
     <script>
@@ -114,10 +115,10 @@
             }, 600);
         }
         
-        // Handle card-open button (right arrow)
-        document.getElementById("card-open")?.addEventListener("click", () => {
+        // Handle next scene button (right arrow)
+        document.getElementById("next-scene")?.addEventListener("click", () => {
             if (!card.classList.contains("open")) {
-                // Open card
+                // Open card and start automatic playback
                 card?.classList.add("open");
                 currentScene = 0;
                 isNavigating = false;
@@ -132,7 +133,7 @@
                     musicToggle.classList.remove("muted");
                 }
                 
-                // Reset all scenes and start automatic animation
+                // Reset all scenes - let CSS animations play automatically
                 const allScenes = document.querySelectorAll(".scene");
                 allScenes.forEach((scene) => {
                     scene.style.animation = "";
@@ -149,37 +150,50 @@
                         card?.classList.remove("open");
                     }
                 }, 46000);
+            } else if (!isManualMode) {
+                // Switch to manual mode when user clicks arrow during automatic playback
+                navigateToScene(Math.min(currentScene + 1, scenes.length - 1));
             } else {
-                // Navigate to next scene
+                // Already in manual mode - navigate to next scene
                 if (currentScene < scenes.length - 1) {
                     navigateToScene(currentScene + 1);
                 }
             }
         });
         
-        // Handle card-close button (left arrow)
-        document.getElementById("card-close")?.addEventListener("click", () => {
-            if (card.classList.contains("open") && isManualMode) {
-                // Navigate to previous scene (only when manually navigating)
+        // Handle previous scene button (left arrow)
+        document.getElementById("prev-scene")?.addEventListener("click", () => {
+            if (!card.classList.contains("open")) {
+                return; // Do nothing if card is closed
+            }
+            
+            if (!isManualMode) {
+                // Switch to manual mode when user clicks arrow during automatic playback
+                navigateToScene(Math.max(currentScene - 1, 0));
+            } else {
+                // Already in manual mode - navigate to previous scene
                 if (currentScene > 0) {
                     navigateToScene(currentScene - 1);
                 }
-            } else {
-                // Close card
-                card?.classList.remove("open");
-                if (autoPlayTimeout) clearTimeout(autoPlayTimeout);
-                isManualMode = false;
-                
-                // Reset all scene styles when closing
-                const allScenes = document.querySelectorAll(".scene");
-                allScenes.forEach((scene) => {
-                    scene.style.animation = "";
-                    scene.style.opacity = "";
-                    scene.style.transform = "";
-                    scene.style.transition = "";
-                    scene.style.pointerEvents = "";
-                });
             }
+        });
+        
+        // Handle close button (X button)
+        document.getElementById("card-close")?.addEventListener("click", () => {
+            // Always close card when X is clicked
+            card?.classList.remove("open");
+            if (autoPlayTimeout) clearTimeout(autoPlayTimeout);
+            isManualMode = false;
+            
+            // Reset all scene styles when closing
+            const allScenes = document.querySelectorAll(".scene");
+            allScenes.forEach((scene) => {
+                scene.style.animation = "";
+                scene.style.opacity = "";
+                scene.style.transform = "";
+                scene.style.transition = "";
+                scene.style.pointerEvents = "";
+            });
         });
         
         // Music toggle
