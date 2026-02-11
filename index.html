@@ -77,6 +77,7 @@
         let musicPlaying = false;
         let currentScene = 0;
         let isNavigating = false;
+        let autoPlayTimeout = null;
         
         const scenes = [1, 2, 3, 4, 5, 6, 7];
         
@@ -109,54 +110,61 @@
             }, 300);
         }
         
+        // Handle card-open button (right arrow)
         document.getElementById("card-open")?.addEventListener("click", () => {
-            card?.classList.add("open");
-            currentScene = 0;
-            isNavigating = false;
-            
-            // Start music when card opens (first time only)
-            if (!musicPlaying) {
-                music.currentTime = 0;
-                music.play().catch(err => console.log("Play failed:", err));
-                musicPlaying = true;
-                musicToggle.textContent = "🔊";
-                musicToggle.classList.remove("muted");
+            if (!card.classList.contains("open")) {
+                // Open card
+                card?.classList.add("open");
+                currentScene = 0;
+                isNavigating = false;
+                
+                // Start music when card opens (first time only)
+                if (!musicPlaying) {
+                    music.currentTime = 0;
+                    music.play().catch(err => console.log("Play failed:", err));
+                    musicPlaying = true;
+                    musicToggle.textContent = "🔊";
+                    musicToggle.classList.remove("muted");
+                }
+                // Reset animation by removing and re-adding the class to trigger restart
+                if (storybook) {
+                    storybook.style.animation = "none";
+                    storybook.style.pointerEvents = "auto";
+                    setTimeout(() => {
+                        storybook.style.animation = "";
+                    }, 10);
+                }
+                // Auto-close card after animation completes (45s + buffer)
+                if (autoPlayTimeout) clearTimeout(autoPlayTimeout);
+                autoPlayTimeout = setTimeout(() => {
+                    card?.classList.remove("open");
+                    if (storybook) {
+                        storybook.style.animation = "none";
+                    }
+                }, 46000);
+            } else {
+                // Navigate to next scene
+                if (currentScene < scenes.length - 1) {
+                    navigateToScene(currentScene + 1);
+                }
             }
-            // Reset animation by removing and re-adding the class to trigger restart
-            if (storybook) {
-                storybook.style.animation = "none";
-                storybook.style.pointerEvents = "auto";
-                setTimeout(() => {
-                    storybook.style.animation = "";
-                }, 10);
-            }
-            // Auto-close card after animation completes (45s + buffer)
-            setTimeout(() => {
+        });
+        
+        // Handle card-close button (left arrow)
+        document.getElementById("card-close")?.addEventListener("click", () => {
+            if (card.classList.contains("open") && storybook.style.animation === "none") {
+                // Navigate to previous scene (only when manually navigating)
+                if (currentScene > 0) {
+                    navigateToScene(currentScene - 1);
+                }
+            } else {
+                // Close card
                 card?.classList.remove("open");
+                if (autoPlayTimeout) clearTimeout(autoPlayTimeout);
+                // Reset animation state when closing
                 if (storybook) {
                     storybook.style.animation = "none";
                 }
-            }, 46000);
-        });
-        
-        document.getElementById("card-close")?.addEventListener("click", () => {
-            card?.classList.remove("open");
-            // Reset animation state when closing
-            if (storybook) {
-                storybook.style.animation = "none";
-            }
-        });
-        
-        // Navigation with arrow buttons
-        document.getElementById("card-open")?.addEventListener("click", (e) => {
-            if (card.classList.contains("open") && !isNavigating) {
-                navigateToScene(currentScene + 1);
-            }
-        });
-        
-        document.getElementById("card-close")?.addEventListener("click", (e) => {
-            if (card.classList.contains("open") && !isNavigating) {
-                navigateToScene(currentScene - 1);
             }
         });
         
