@@ -78,6 +78,7 @@
         let currentScene = 0;
         let isNavigating = false;
         let autoPlayTimeout = null;
+        let isManualMode = false;
         
         const scenes = [1, 2, 3, 4, 5, 6, 7];
         
@@ -85,29 +86,32 @@
             if (isNavigating || !card.classList.contains("open")) return;
             
             isNavigating = true;
+            isManualMode = true;
             currentScene = Math.min(Math.max(sceneNumber, 0), scenes.length - 1);
             
-            // Pause animation and manually set scene visibility
-            if (storybook) {
-                storybook.style.animation = "none";
-                storybook.style.pointerEvents = "none";
-            }
+            // Stop all automatic animations
+            const allScenes = document.querySelectorAll(".scene");
+            allScenes.forEach((scene) => {
+                scene.style.animation = "none";
+                scene.style.transition = "all 0.6s ease";
+            });
             
             // Hide all scenes and show current one
-            const allScenes = document.querySelectorAll(".scene");
             allScenes.forEach((scene, index) => {
                 if (index === currentScene) {
                     scene.style.opacity = "1";
                     scene.style.transform = "scale(1)";
+                    scene.style.pointerEvents = "auto";
                 } else {
                     scene.style.opacity = "0";
                     scene.style.transform = "scale(0.95)";
+                    scene.style.pointerEvents = "none";
                 }
             });
             
             setTimeout(() => {
                 isNavigating = false;
-            }, 300);
+            }, 600);
         }
         
         // Handle card-open button (right arrow)
@@ -117,6 +121,7 @@
                 card?.classList.add("open");
                 currentScene = 0;
                 isNavigating = false;
+                isManualMode = false;
                 
                 // Start music when card opens (first time only)
                 if (!musicPlaying) {
@@ -126,20 +131,22 @@
                     musicToggle.textContent = "🔊";
                     musicToggle.classList.remove("muted");
                 }
-                // Reset animation by removing and re-adding the class to trigger restart
-                if (storybook) {
-                    storybook.style.animation = "none";
-                    storybook.style.pointerEvents = "auto";
-                    setTimeout(() => {
-                        storybook.style.animation = "";
-                    }, 10);
-                }
+                
+                // Reset all scenes and start automatic animation
+                const allScenes = document.querySelectorAll(".scene");
+                allScenes.forEach((scene) => {
+                    scene.style.animation = "";
+                    scene.style.opacity = "";
+                    scene.style.transform = "";
+                    scene.style.transition = "";
+                    scene.style.pointerEvents = "";
+                });
+                
                 // Auto-close card after animation completes (45s + buffer)
                 if (autoPlayTimeout) clearTimeout(autoPlayTimeout);
                 autoPlayTimeout = setTimeout(() => {
-                    card?.classList.remove("open");
-                    if (storybook) {
-                        storybook.style.animation = "none";
+                    if (!isManualMode) {
+                        card?.classList.remove("open");
                     }
                 }, 46000);
             } else {
@@ -152,7 +159,7 @@
         
         // Handle card-close button (left arrow)
         document.getElementById("card-close")?.addEventListener("click", () => {
-            if (card.classList.contains("open") && storybook.style.animation === "none") {
+            if (card.classList.contains("open") && isManualMode) {
                 // Navigate to previous scene (only when manually navigating)
                 if (currentScene > 0) {
                     navigateToScene(currentScene - 1);
@@ -161,10 +168,17 @@
                 // Close card
                 card?.classList.remove("open");
                 if (autoPlayTimeout) clearTimeout(autoPlayTimeout);
-                // Reset animation state when closing
-                if (storybook) {
-                    storybook.style.animation = "none";
-                }
+                isManualMode = false;
+                
+                // Reset all scene styles when closing
+                const allScenes = document.querySelectorAll(".scene");
+                allScenes.forEach((scene) => {
+                    scene.style.animation = "";
+                    scene.style.opacity = "";
+                    scene.style.transform = "";
+                    scene.style.transition = "";
+                    scene.style.pointerEvents = "";
+                });
             }
         });
         
