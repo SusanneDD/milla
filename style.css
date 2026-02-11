@@ -237,6 +237,7 @@ body {
 		14px 56px 0 0px #333,
 		14px 70px 0 -1px #333,
 		14px 84px 0 -1px #333;
+	animation: rose-glow 2.8s ease-in-out infinite;
 }
 
 @keyframes rose-glow {
@@ -323,8 +324,37 @@ body {
 		14px 90px 0 -1px #d83f80;
 }
 
+.scene-5 .lady::after {
+	box-shadow:
+		/* Left arm - thicker */
+		-26px 12px 0 0px #ff9ac6,
+		-20px 6px 0 -1px #ff9ac6,
+		-12px 0 0 -1px #ff9ac6,
+		-5px -3px 0 -1px #ff9ac6,
+		/* Right arm - thicker */
+		26px 12px 0 0px #ff9ac6,
+		20px 6px 0 -1px #ff9ac6,
+		12px 0 0 -1px #ff9ac6,
+		5px -3px 0 -1px #ff9ac6,
+		/* Skirt bottom flare */
+		-20px 56px 0 -2px #d83f80,
+		20px 56px 0 -2px #d83f80,
+		/* Left leg - thicker */
+		-14px 62px 0 0px #d83f80,
+		-14px 76px 0 -1px #d83f80,
+		-14px 90px 0 -1px #d83f80,
+		/* Right leg - thicker */
+		14px 62px 0 0px #d83f80,
+		14px 76px 0 -1px #d83f80,
+		14px 90px 0 -1px #d83f80;
+}
+
 .lady.smile::before {
-	animation: lady-glow 3.5s ease-in-out infinite;
+	animation: none;
+}
+
+.scene-5 .lady.smile::before {
+	animation: none !important;
 }
 
 @keyframes blush {
