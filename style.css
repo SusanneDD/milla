@@ -318,7 +318,9 @@ body {
 .scene-4 .forest-bg {
 	position: absolute;
 	inset: -8% 0 0 0;
-	background: linear-gradient(180deg, #f8d7e6 0%, #f3c9dd 42%, #cfe7c6 43%, #b8d8a9 70%, #a2c98f 100%);
+	background:
+		radial-gradient(circle at 15% 18%, #ffe08a 0 18px, rgba(255, 224, 138, 0.5) 19px, transparent 30px),
+		linear-gradient(180deg, #dff2ff 0%, #e9f7ff 42%, #cfe7c6 43%, #b8d8a9 70%, #a2c98f 100%);
 	z-index: 0;
 }
 
@@ -329,11 +331,8 @@ body {
 	background:
 		radial-gradient(circle at 12% 48%, #7eb77a 0 26px, transparent 27px),
 		radial-gradient(circle at 28% 44%, #6aa66a 0 30px, transparent 31px),
-		radial-gradient(circle at 46% 46%, #7eb77a 0 24px, transparent 25px),
 		radial-gradient(circle at 68% 44%, #6aa66a 0 32px, transparent 33px),
-		radial-gradient(circle at 86% 47%, #7eb77a 0 26px, transparent 27px),
-		radial-gradient(circle at 20% 64%, rgba(106, 166, 106, 0.6) 0 22px, transparent 23px),
-		radial-gradient(circle at 60% 64%, rgba(126, 183, 122, 0.6) 0 20px, transparent 21px);
+		radial-gradient(circle at 86% 47%, #7eb77a 0 26px, transparent 27px);
 	opacity: 0.9;
 }
 
@@ -344,7 +343,6 @@ body {
 	background:
 		linear-gradient(#6b4a2b, #6b4a2b) 12% 62%/10px 48px no-repeat,
 		linear-gradient(#6b4a2b, #6b4a2b) 28% 60%/12px 52px no-repeat,
-		linear-gradient(#6b4a2b, #6b4a2b) 46% 62%/10px 46px no-repeat,
 		linear-gradient(#6b4a2b, #6b4a2b) 68% 60%/12px 54px no-repeat,
 		linear-gradient(#6b4a2b, #6b4a2b) 86% 62%/10px 48px no-repeat;
 	opacity: 0.85;
@@ -353,6 +351,11 @@ body {
 .scene-4 > *:not(.forest-bg) {
 	position: relative;
 	z-index: 1;
+}
+
+.scene-4 .gentleman.picking,
+.scene-4 .gentleman.picking::after {
+	animation: none;
 }
 
 @keyframes picking-body {
