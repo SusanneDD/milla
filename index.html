@@ -7,6 +7,11 @@
     <title>Alla hjärtans dag</title>
 </head>
 <body>
+    <!-- Bakgrundsmusik -->
+    <audio id="background-music" autoplay loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    
     <main class="page">
         <section class="card-stage">
             <div class="card" id="valentine-card">
@@ -58,6 +63,7 @@
             <div class="controls">
                 <button class="control" id="card-open" aria-label="Öppna kort">→</button>
                 <button class="control" id="card-close" aria-label="Stäng kort">←</button>
+                <button class="control music-toggle" id="music-toggle" aria-label="Slå på/av musik">🔊</button>
             </div>
             <p class="hint">Använd pilarna för att öppna och stänga kortet.</p>
         </section>
@@ -89,6 +95,22 @@
             // Reset animation state when closing
             if (storybook) {
                 storybook.style.animation = "none";
+            }
+        });
+        
+        // Music toggle
+        const music = document.getElementById("background-music");
+        const musicToggle = document.getElementById("music-toggle");
+        
+        musicToggle?.addEventListener("click", () => {
+            if (music.paused) {
+                music.play();
+                musicToggle.textContent = "🔊";
+                musicToggle.classList.remove("muted");
+            } else {
+                music.pause();
+                musicToggle.textContent = "🔇";
+                musicToggle.classList.add("muted");
             }
         });
     </script>
