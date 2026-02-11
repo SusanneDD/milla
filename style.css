@@ -387,9 +387,22 @@ body {
 	filter: drop-shadow(0 8px 16px rgba(255, 119, 183, 0.4));
 }
 
+.roses-bunch.pulse-effect {
+	animation: float-romantic-roses 6s ease-in-out infinite, pulse-roses 1.5s ease-in-out infinite;
+}
+
 @keyframes float-romantic-roses {
 	0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
 	50% { transform: translateY(-16px) rotate(4deg) scale(1.08); }
+}
+
+@keyframes pulse-roses {
+	0%, 100% { 
+		filter: drop-shadow(0 8px 16px rgba(255, 119, 183, 0.4));
+	}
+	50% { 
+		filter: drop-shadow(0 8px 20px rgba(255, 119, 183, 0.7)) drop-shadow(0 0 24px rgba(255, 77, 120, 0.6));
+	}
 }
 
 .roses-bunch::before,
