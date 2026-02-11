@@ -315,6 +315,11 @@ body {
 	overflow: hidden;
 }
 
+.scene-4 .gentleman {
+	width: 54px;
+	height: 90px;
+}
+
 .scene-4 .forest-bg {
 	position: absolute;
 	inset: -8% 0 0 0;
