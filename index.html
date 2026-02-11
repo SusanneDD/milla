@@ -8,8 +8,8 @@
 </head>
 <body>
     <!-- Bakgrundsmusik -->
-    <audio id="background-music" autoplay loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    <audio id="background-music" loop>
+        <source src="romance.mp3" type="audio/mpeg">
     </audio>
     
     <main class="page">
@@ -71,9 +71,20 @@
     <script>
         const card = document.getElementById("valentine-card");
         const storybook = document.getElementById("storybook");
+        const music = document.getElementById("background-music");
+        const musicToggle = document.getElementById("music-toggle");
+        let musicPlaying = false;
         
         document.getElementById("card-open")?.addEventListener("click", () => {
             card?.classList.add("open");
+            // Start music when card opens (first time only)
+            if (!musicPlaying) {
+                music.currentTime = 0;
+                music.play().catch(err => console.log("Play failed:", err));
+                musicPlaying = true;
+                musicToggle.textContent = "🔊";
+                musicToggle.classList.remove("muted");
+            }
             // Reset animation by removing and re-adding the class to trigger restart
             if (storybook) {
                 storybook.style.animation = "none";
@@ -99,18 +110,23 @@
         });
         
         // Music toggle
-        const music = document.getElementById("background-music");
-        const musicToggle = document.getElementById("music-toggle");
-        
-        musicToggle?.addEventListener("click", () => {
+        musicToggle?.addEventListener("click", (e) => {
+            e.stopPropagation();
             if (music.paused) {
-                music.play();
-                musicToggle.textContent = "🔊";
-                musicToggle.classList.remove("muted");
+                music.currentTime = 0;
+                const playPromise = music.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        musicToggle.textContent = "🔊";
+                        musicToggle.classList.remove("muted");
+                        musicPlaying = true;
+                    }).catch(err => console.log("Play failed:", err));
+                }
             } else {
                 music.pause();
                 musicToggle.textContent = "🔇";
                 musicToggle.classList.add("muted");
+                musicPlaying = false;
             }
         });
     </script>
